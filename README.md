@@ -3,7 +3,7 @@
 
 
 
-| class | subject                         | note                |
-| ----- | ------------------------------- | ------------------- |
-| 1     | 개념잡기(Observable, Sugar API) | [go](./note/class1) |
+| class | subject                         | note                   |
+| ----- | ------------------------------- | ---------------------- |
+| 1     | 개념잡기(Observable, Sugar API) | [go](./note/class1.md) |
 
