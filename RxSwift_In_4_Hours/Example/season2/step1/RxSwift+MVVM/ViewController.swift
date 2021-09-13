@@ -46,7 +46,7 @@ class ViewController: UIViewController {
     /** Sugar API
      just, from ...
      */
-    func downloadJson(_ url: String) -> Observable<String?> {
+    func downloadJson(_ url: String) -> Observable<String> {
         // 1. 비동기로 생기는 데이터를 Observable로 감싸서 리턴하는 방법
         return Observable.create() { emitter in
             let url = URL(string: url)!
@@ -82,23 +82,23 @@ class ViewController: UIViewController {
         setVisibleWithAnimation(activityIndicator, true)
         
         // 2. Observable로 오는 데이터를 받아서 처리하는 방법
-        let disposable = downloadJson(MEMBER_LIST_URL)
-            .subscribe {event in
-                switch event {
-                // .next: 데이터가 전달될 때
-                case .next(let json) :
-                    DispatchQueue.main.async {
-                        self.editView.text = json
-                        self.setVisibleWithAnimation(self.activityIndicator, false)
-                    }
-                // .completed: 데이터가 완전히 다 전달되고 끝났을 때
-                case .completed:
-                    break
-                // error: 에러났을 때
-                case .error:
-                    break
-                }
-            }
+//        let disposable = downloadJson(MEMBER_LIST_URL)
+//            .subscribe {event in
+//                switch event {
+//                // .next: 데이터가 전달될 때
+//                case .next(let json) :
+//                    DispatchQueue.main.async {
+//                        self.editView.text = json
+//                        self.setVisibleWithAnimation(self.activityIndicator, false)
+//                    }
+//                // .completed: 데이터가 완전히 다 전달되고 끝났을 때
+//                case .completed:
+//                    break
+//                // error: 에러났을 때
+//                case .error:
+//                    break
+//                }
+//            }
         
         // 작업 취소
         // disposable.dispose()
@@ -111,5 +111,17 @@ class ViewController: UIViewController {
 //            .subscribe(onNext: { print($0) },
 //                       onError: { err in print(err) },
 //                       onCompleted: { print("Com") })
+        
+        let jsonObservable = downloadJson(MEMBER_LIST_URL)
+        let helloObservable = Observable.just("Hello World")
+        
+        Observable.zip(jsonObservable, helloObservable) { $1 + "\n" + $0 }
+            .observeOn(MainScheduler.instance) // UI처리를 Main Thread해야하니까 써야하는 main 큐 간소화: Operator
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .default)) // observeOn을 제외한 나머지 동작들을 어느 쓰레드에서 할것인지 정함: Operator
+            .subscribe(onNext: { json in
+                self.editView.text = json
+                self.setVisibleWithAnimation(self.activityIndicator, false)
+                
+            })
     }
 }

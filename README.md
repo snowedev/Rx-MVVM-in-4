@@ -1,6 +1,6 @@
 # RxSwift + MVVM 4시간 안에 끝내기
 
-> 01:23:00 / 03:41:52
+> 01:30:00 / 03:41:52
 
 ## RxSwift를 사용한 비동기 프로그래밍
 
@@ -105,18 +105,17 @@ self.setVisibleWithAnimation(self.activityIndicator, false)
 비동기적으로 생겨나는 데이터를 클로저로 주지않고 return 값으로 줄 수 있게 만드는 방법
 
 ```swift
-
 let MEMBER_LIST_URL = "https://my.api.mockaroo.com/members_with_avatar.json?key=44ce18f0"
 
 class 나중에생기는데이터<T> {
     private let task: (@escaping (T) -> Void) -> Void
   
     init(task: @escaping (@escaping (T) -> Void) -> Void) {
-      self.task = task
+      	self.task = task
     }
   
     func 나중에오면(_ f: @escaping (T) -> Void) {
-      task(f)
+      	task(f)
     }
 }
 
@@ -333,7 +332,7 @@ class ViewController: UIViewController {
 
 ```
 
-RxSwift의 기본 사용법
+> RxSwift의 기본 사용법
 
 ---
 
@@ -355,24 +354,24 @@ Sugar = Operator
 
 ```swift
 func downloadJson(_ url: String) -> Observable<String?> {
-  return Observable.just("Hello World")
-  // 아래의 것을 간소화 한 것
-  //        return Observable.create { emitter in
-  //            emitter.onNext("Hello World")
-  //            emitter.onCompleted()
-  //            return Disposables.create()
-  //        }
-  
-  // onNext()에서는
-  // Optional("Hello World")
+      return Observable.just("Hello World")
+      // 아래의 것을 간소화 한 것
+      //        return Observable.create { emitter in
+      //            emitter.onNext("Hello World")
+      //            emitter.onCompleted()
+      //            return Disposables.create()
+      //        }
+
+      // onNext()에서는
+      // Optional("Hello World")
 }
 
 // or 
 
 func downloadJson(_ url: String) -> Observable<Array?> {
-  return Observable.just(["Hello", "World"])
-  // onNext()에서는
-  // Optional(["Hello","World"])
+      return Observable.just(["Hello", "World"])
+      // onNext()에서는
+      // Optional(["Hello","World"])
 }
 ```
 
@@ -382,11 +381,11 @@ func downloadJson(_ url: String) -> Observable<Array?> {
 
 ```swift
 func downloadJson(_ url: String) -> Observable<String?> {
-	return Observable.just(["Hello", "World"])
-  
-  // onNext()에서는
-  // Optional("Hello")
-  // Optional("World")
+      return Observable.just(["Hello", "World"])
+
+      // onNext()에서는
+      // Optional("Hello")
+      // Optional("World")
 }
 ```
 
@@ -396,10 +395,9 @@ func downloadJson(_ url: String) -> Observable<String?> {
 
 ```swift
 // 위에서 사용한 subscribe 간소화
-_ = downloadJson(MEMBER_LIST_URL)
-					.subscribe(onNext: { print($0) },
-           onError: { err in print(err) },
-           onCompleted: { print("Com") })
+_ = downloadJson(MEMBER_LIST_URL).subscribe(onNext: { print($0) },
+                                            onError: { err in print(err) },
+                                            onCompleted: { print("Com") })
 ```
 
 
@@ -419,18 +417,70 @@ case .next(let json) :
 
 // 위에서 사용한 subscribe 간소화
 _ = downloadJson(MEMBER_LIST_URL)
-					// observeOn을 제외한 나머지 동작들을 어느 쓰레드에서 할것인지 정함 , 위치 무관: Operator
-					.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .default)) 
-					// UI처리를 Main Thread해야하니까 써야하는 main 큐 간소화: Operator
-          .observeOn(MainScheduler.instance)
-          .subscribe(onNext: { print($0) },
-           onError: { err in print(err) },
-           onCompleted: { print("Com") })
+	// observeOn: UI처리를 Main Thread해야하니까 써야하는 main 큐 간소화
+	.observeOn(MainScheduler.instance)
+	// subscribeOn: observeOn을 제외한 나머지 동작들을 어느 쓰레드에서 할것인지 정함: Operator
+	.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .default))
+	.subscribe(
+		onNext: { print($0) },
+		onError: { err in print(err) },
+		onCompleted: { print("Com") }
+	)
 ```
 
 
 
 ### Stream의 분리 및 병합 
 
-`merge` `zip` `combineLatest`
+* [`merge`](http://reactivex.io/documentation/operators/merge.html) : 그림처럼 Observable들이 나오는 족족 하나로 합쳐 주는 역할을 한다. 
+
+  * **그렇기 때문에 데이터들의 타입이 서로 같아야 한다!**
+
+  <img width=40% alt="image" src="https://user-images.githubusercontent.com/42789819/132990951-05e479b4-d6ca-42c8-b07a-f9ca3b6a9463.png">
+
+  
+
+* [`zip`](http://reactivex.io/documentation/operators/zip.html) : Observable들이 짝을 이루어서 내려온다. 
+
+  * **그렇기 때문에 그림에서 5처럼 짝이 없는 경우 내려오지 않는다!**
+
+  * **짝만 있다면 데이터 타입은 서로 달라도 무방하다.**
+
+    <img width=40% alt="image" src="https://user-images.githubusercontent.com/42789819/132991133-dbd3c4e6-f0ba-4743-bfb6-10ec6f4119c4.png">
+
+* [`combineLatest`](http://reactivex.io/documentation/operators/combinelatest.html)
+
+  * `zip`이랑 비슷하지만 `zip`은 짝이 있어야 내려오는 반면 `combineLatest`는 해당 Observable이 나온 시점과 가장 가까운 시점에 나온 Observable하고 짝을 이루어 내려온다.
+  * `1`은  `A`랑 가장 가까우니 `1A`
+  * `B`,`C`,`D`가 나온 시점에서는 아직 `3`이 나오기 전 시점이니까 `2`랑 가까우니 `2B`, `2C`,`2D`
+
+  <img width=40% alt="image" src="https://user-images.githubusercontent.com/42789819/132991385-db49bd1d-323e-4e58-aa3b-157768fc0068.png">
+
+  * `zip` 사용 예시
+
+    ```swift
+    @IBAction func onLoad() {
+        editView.text = ""
+        setVisibleWithAnimation(activityIndicator, true)
+    
+        let jsonObservable = downloadJson(MEMBER_LIST_URL)
+        let helloObservable = Observable.just("Hello World")
+      
+        // zip 활용해서 데이터를 짝을 이루어서 처리
+        Observable.zip(jsonObservable, helloObservable) { $1 + "\n" + $0 }
+            .observeOn(MainScheduler.instance)
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .default)) 
+            .subscribe(onNext: { json in
+                self.editView.text = json
+                self.setVisibleWithAnimation(self.activityIndicator, false)
+                
+            })
+    }
+    ```
+
+    <img width=20% src="https://user-images.githubusercontent.com/42789819/132992454-4680d378-565d-4c1f-997f-488de4677b3f.png">
+
+---
+
+## 여기까지 배운거 총 정리 1:30:00~
 
