@@ -17,7 +17,7 @@
 		E81057BC27C91AA400446B65 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = E81057BB27C91AA400446B65 /* RxRelay */; };
 		E81057BE27C91AA400446B65 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E81057BD27C91AA400446B65 /* RxSwift */; };
 		E81057C127C91BFB00446B65 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E81057C027C91BFB00446B65 /* SnapKit */; };
-		E81057C327C91C0E00446B65 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81057C227C91C0E00446B65 /* ViewModel.swift */; };
+		E81057C327C91C0E00446B65 /* CombineLatestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81057C227C91C0E00446B65 /* CombineLatestViewModel.swift */; };
 		E81057C627C9225200446B65 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = E81057C527C9225200446B65 /* Then */; };
 /* End PBXBuildFile section */
 
@@ -30,7 +30,7 @@
 		E81057AD27C91A7C00446B65 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E81057B027C91A7C00446B65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E81057B227C91A7C00446B65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E81057C227C91C0E00446B65 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		E81057C227C91C0E00446B65 /* CombineLatestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineLatestViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +71,7 @@
 				E81057A427C91A7B00446B65 /* AppDelegate.swift */,
 				E81057A627C91A7B00446B65 /* SceneDelegate.swift */,
 				E81057A827C91A7B00446B65 /* ViewController.swift */,
-				E81057C227C91C0E00446B65 /* ViewModel.swift */,
+				E81057C227C91C0E00446B65 /* CombineLatestViewModel.swift */,
 				E81057AA27C91A7B00446B65 /* Main.storyboard */,
 				E81057AD27C91A7C00446B65 /* Assets.xcassets */,
 				E81057AF27C91A7C00446B65 /* LaunchScreen.storyboard */,
@@ -165,7 +165,7 @@
 			files = (
 				E81057A927C91A7B00446B65 /* ViewController.swift in Sources */,
 				E81057A527C91A7B00446B65 /* AppDelegate.swift in Sources */,
-				E81057C327C91C0E00446B65 /* ViewModel.swift in Sources */,
+				E81057C327C91C0E00446B65 /* CombineLatestViewModel.swift in Sources */,
 				E81057A727C91A7B00446B65 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
